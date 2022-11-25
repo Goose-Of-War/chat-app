@@ -8,7 +8,7 @@ module.exports = function handler (app) {
 		const args = req.path.split("/");
 		switch (args[1]) {
 			case '' : {
-				res.sendFile(path.join(__dirname, '../templates/index.html'));
+				res.sendFile('index.html');
 				break;
 			}
 			case 'signup': {
@@ -21,14 +21,22 @@ module.exports = function handler (app) {
 		};
 	};
 
-	function post (req, res) {
+	async function post (req, res) {
 		const args = req.path.split("/");
 		switch (args[1]) {
 			case 'signup' : {
-				console.log(req.body);
 				const user = { username, displayName, emailAddress, password } = req.body;
-				// need to add validator
-				DBH.addNewUser(user)
+				if (Tools.checkUserInfo(user)) {
+					try {
+						await DBH.addNewUser(user); 
+						res.send("<html><body>Success</body></html>");
+					}
+					catch (err) {
+						console.log(err)
+						res.send("<html><body>Something's wrong</body></html>");
+					}
+				}
+				else res.send("<html><body>Something's wrong</body></html>");
 				break;
 			}
 		};
