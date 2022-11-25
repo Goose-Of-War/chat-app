@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>Sign Up</title>
+		<style>
+			
+		</style>
+
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script>
+			function submitCreds() {
+				let inputs = document.getElementsByTagName('input');
+				const details = {};
+				for (let i in inputs) {
+					details[inputs[i]?.name] = inputs[i]?.value;
+				};
+				axios.post('/signin', details);
+			};
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th colspan="2">Sign In</th>
+			</tr>
+			<tr>
+				<th>Username:</th>
+				<td><input type="text" name="username"></td>
+			</tr>
+			<tr>
+				<th>Password:</th>
+				<td><input type="password" name="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><button onclick="submitCreds()">Submit</button></td>
+			</tr>
+		</div>
+	</body>
+</html>

@@ -7,7 +7,7 @@ module.exports = function handler (app) {
 	function get (req, res) {
 		const args = req.path.split("/");
 		switch (args[1]) {
-			case '' : {
+			case '': {
 				res.sendFile('index.html');
 				break;
 			}
@@ -15,8 +15,12 @@ module.exports = function handler (app) {
 				res.sendFile(path.join(__dirname, '../templates/signup.html'));
 				break;
 			}
-			default : {
-				res.send('');
+			case 'signin': {
+				res.sendFile(path.join(__dirname, '../templates/signin.html'));
+				break;
+			}
+			default: {
+				res.send(';-;');
 			}
 		};
 	};
@@ -24,20 +28,31 @@ module.exports = function handler (app) {
 	async function post (req, res) {
 		const args = req.path.split("/");
 		switch (args[1]) {
-			case 'signup' : {
+			case 'signup': {
 				const user = { username, displayName, emailAddress, password } = req.body;
 				if (Tools.checkUserInfo(user)) {
 					try {
 						await DBH.addNewUser(user); 
-						res.send("<html><body>Success</body></html>");
+						console.log("Success")
 					}
 					catch (err) {
 						console.log(err)
-						res.send("<html><body>Something's wrong</body></html>");
 					}
 				}
 				else res.send("<html><body>Something's wrong</body></html>");
 				break;
+			}
+			case 'signin': {
+				const { username, password } = req.body;
+				const user = await DBH.getUser({
+					username,
+					password: Tools.encodePassword(password)
+				});
+				user ? console.log("User Found") : console.log("Credentials don't match records")
+				break;
+			}
+			default: {
+				res.send(";-;");
 			}
 		};
 	};

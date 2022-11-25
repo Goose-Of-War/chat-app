@@ -19,4 +19,4 @@ async function addNewUser (_user) {
 	return user.save();
 }
 
-module.exports = { addNewUser }
+module.exports = { addNewUser, getUser }
