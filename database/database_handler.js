@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const User = require('./schemas/User');
+const Information = require('./schemas/Information');
+const ChatMessageSchema = require('./schemas/ChatMessage');
 
 async function getUser (cred) {
 	return (await User.findOne(cred));
@@ -19,4 +21,24 @@ async function addNewUser (_user) {
 	return user.save();
 }
 
-module.exports = { addNewUser, getUser }
+async function getChats() {
+	const info = await Information.findOne();
+	if (info) return info.chatSockets;
+	throw new Error('No Sockets Found');
+}
+
+async function saveMessage(msg) {
+	// msg = { chat, user, message }
+	const chats = await getChats();
+	if (!chats.find(socket => socket === msg.chat)) throw new Error("Socket doesn't exist ;-;");
+	ChatMessageSchema.set('collection', msg.chat);
+	const ChatMessage = mongoose.model(ChatMessageSchema);
+	const message = ChatMessage({
+		user: msg.user,
+		message: msg.message,
+		time: new Date()
+	});
+	return message.save()
+}
+
+module.exports = { addNewUser, getUser, getChats, saveMessage }
