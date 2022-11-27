@@ -26,7 +26,7 @@ Well, mongoose works, so yay for that. I got sign-in and sign-up working on me. 
 In terms of front-end, we have no front-end (if you actually read that in the Gru voice, you are definitely a man of culture.) I'll probably work on it in the very end (or if anyone wants to fork this, you're welcome to. I'll probably treat you to a cup of coffee or some maggi or something)
 I'm currently working on the cookie/message service, so till I get there, stay tuned (and gimme some treats as well if you want to :D)
 
-_ Until then, Honk_
+_Until then, Honk_
 #
 _(yes, the standard issue footer)_
 _This repository is being worked on at the moment, so stay tuned as I bring you some more stuff_
