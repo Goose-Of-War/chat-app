@@ -13,7 +13,9 @@
 				for (let i in inputs) {
 					details[inputs[i]?.name] = inputs[i]?.value;
 				};
-				axios.post('/signin', details);
+				axios.post('/signin', details).then(res => {
+					window.location.href = res.request.responseURL;
+				});
 			};
 		</script>
 	</head>

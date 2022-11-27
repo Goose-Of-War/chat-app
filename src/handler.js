@@ -33,10 +33,10 @@ module.exports = function handler (app) {
 				if (Tools.checkUserInfo(user)) {
 					try {
 						await DBH.addNewUser(user); 
-						console.log("Success")
+						res.redirect("/success");
 					}
 					catch (err) {
-						console.log(err)
+						console.log(err);
 					}
 				}
 				else res.send("<html><body>Something's wrong</body></html>");
@@ -49,6 +49,7 @@ module.exports = function handler (app) {
 					password: Tools.encodePassword(password)
 				});
 				user ? console.log("User Found") : console.log("Credentials don't match records")
+				res.redirect("/success");
 				break;
 			}
 			default: {
