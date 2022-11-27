@@ -21,24 +21,33 @@ async function addNewUser (_user) {
 	return user.save();
 }
 
-async function getChats() {
+async function getChats () {
 	const info = await Information.findOne();
 	if (info) return info.chatSockets;
 	throw new Error('No Sockets Found');
 }
 
-async function saveMessage(msg) {
+async function saveMessage (msg) {
 	// msg = { chat, user, message }
 	const chats = await getChats();
 	if (!chats.find(socket => socket === msg.chat)) throw new Error("Socket doesn't exist ;-;");
-	ChatMessageSchema.set('collection', msg.chat);
-	const ChatMessage = mongoose.model(ChatMessageSchema);
+	ChatMessageSchema.set('collection', 'chat-' + msg.chat);
+	const ChatMessage = mongoose.model('ChatMessage', ChatMessageSchema);
 	const message = ChatMessage({
 		user: msg.user,
 		message: msg.message,
 		time: new Date()
 	});
+	console.log("Saving");
 	return message.save()
 }
 
-module.exports = { addNewUser, getUser, getChats, saveMessage }
+async function fetchMessages (socket) {
+	const chats = await getChats();
+	if (!chats.find(chat => chat === socket)) throw new Error("Socket doesn't exist ;-;");
+	ChatMessageSchema.set('collection', 'chat-' + socket);
+	const ChatMessage = mongoose.model('ChatMessage', ChatMessageSchema);
+	return ChatMessage.find();
+}
+
+module.exports = { addNewUser, fetchMessages, getUser, getChats, saveMessage }

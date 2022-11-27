@@ -1,0 +1,72 @@
+<html>
+<head>
+	<title>Chat</title>
+
+	<style>
+		.message-container{
+			margin: 5px;
+			border: solid 2px black;
+			border-radius: 4px;
+		}
+	</style>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+		let socket;
+		function showMessage (messageObject) {
+			// make a message element
+			let messageElement = document.createElement('div');
+			messageElement.className = 'message-container';
+			// user
+			let userElement = document.createElement('div');
+			userElement.className = 'message-user';
+			userElement.innerHTML = messageObject.user;
+			messageElement.appendChild(userElement);
+			// time
+			let timeElement = document.createElement('div');
+			timeElement.className = 'message-time';
+			timeElement.innerHTML = messageObject.time;
+			messageElement.appendChild(timeElement);
+			// message
+			let bodyElement = document.createElement('div');
+			bodyElement.className = 'message-body';
+			bodyElement.innerHTML = messageObject.message;
+			messageElement.appendChild(bodyElement);
+			// append the whole thing into message container
+			document.getElementsByClassName('messages-container')[0].appendChild(messageElement);
+		}
+
+		function sendMessage () {
+			axios.post('/send-message', {
+				message: document.getElementById('message-field').value,
+				socket
+			});
+			// and then comes a socket broadcast which confirms the user message
+		}
+
+		window.onload = function ( ) {
+			socket = window.location.href.split('/').pop();
+			axios.post('/fetch-messages', { socket }).then(res => {
+				console.log(res);
+				const messages = res.data;
+				messages.forEach(msg => showMessage(msg));
+			});
+		}
+
+	</script>
+</head>
+
+<body>
+	<h3>Chat</h3>
+	<hr>
+	<div class="chat-container">
+		<div class="messages-container">
+		<!-- Will contain the messages present in the chatboard -->
+		</div>
+		<div class="send-container">
+			<input type="text" name="message" id="message-field">
+			<button type="submit" onclick="sendMessage()"> -> </button>
+		</div>
+	</div>
+</body>
+</html>
