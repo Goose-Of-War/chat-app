@@ -1,9 +1,9 @@
 // Main JS file
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const http = require('http');
 const nunjucks = require('nunjucks');
-const path = require('path');
 const socketio = require('socket.io');
 
 const appHandler = require('./handler');
@@ -19,7 +19,7 @@ const io = socketio(honkServer);
 nunjucks.configure({ express: honk })
 honk.use(bodyParser.urlencoded({ extended: true }));
 honk.use(bodyParser.json())
-honk.use(express.static(path.resolve(__dirname, '../templates')));
+honk.use(cookieParser());
 
 appHandler(honk);
 

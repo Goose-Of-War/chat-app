@@ -8,15 +8,21 @@ module.exports = function handler (app) {
 		const args = req.path.split("/");
 		switch (args[1]) {
 			case '': {
-				res.sendFile('index.html');
+				res.sendFile(path.join(__dirname, '../templates/index.html'));
 				break;
 			}
 			case 'signup': {
+				if (req.cookies.user) res.redirect('/success');
 				res.sendFile(path.join(__dirname, '../templates/signup.html'));
 				break;
 			}
 			case 'signin': {
+				if (req.cookies.user) res.redirect('/success');
 				res.sendFile(path.join(__dirname, '../templates/signin.html'));
+				break;
+			}
+			case 'success': {
+				res.sendFile(path.join(__dirname, '../templates/signedin.html'));
 				break;
 			}
 			default: {
@@ -32,24 +38,31 @@ module.exports = function handler (app) {
 				const user = { username, displayName, emailAddress, password } = req.body;
 				if (Tools.checkUserInfo(user)) {
 					try {
-						await DBH.addNewUser(user); 
+						await DBH.addNewUser(user);
+						res.cookie('user', username);
 						res.redirect("/success");
 					}
 					catch (err) {
 						console.log(err);
 					}
 				}
-				else res.send("<html><body>Something's wrong</body></html>");
 				break;
 			}
 			case 'signin': {
 				const { username, password } = req.body;
-				const user = await DBH.getUser({
-					username,
-					password: Tools.encodePassword(password)
-				});
-				user ? console.log("User Found") : console.log("Credentials don't match records")
-				res.redirect("/success");
+				try {
+					const user = await DBH.getUser({
+						username,
+						password: Tools.encodePassword(password)
+					});
+					if (user) {
+						res.cookie('user', username);
+						res.redirect("/success");
+					}
+				}
+				catch (err) {
+					console.log(err);
+				}
 				break;
 			}
 			default: {
