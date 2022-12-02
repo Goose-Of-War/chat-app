@@ -14,17 +14,17 @@ The good old backstory for why I am doing this. So... now that I have been worki
 > _For those who skipped my intro and directly came here, congrats. You made me sad ;-;_
 
 The chat app works on node, using the following modules:
+- `axios`: to send POST requests (I don't like the form)
 - `express`: for the app in itself
 = `mongoose`: to store and use the data
-- `express-session`: (yeah... I actually need to add this stuff and work on it)
+- `cookie-parser`: for storing the username
 - `socket.io`: for the message service (working on it in the new branch)
 - `nunjucks`: for the templates (when I finally get to front-end ;-;)
 
 ### Current progress (and 
 
-Well, mongoose works, so yay for that. I got sign-in and sign-up working on me. So that's fine ig. I still need to work on making cookies and actually linking users to their actions. So, there's that. 
+Well, mongoose works, so yay for that. I got sign-in and sign-up working on me. So that's fine ig. It is with great pleasure that I announce that I finally have cookies and that the messages sent are being stored. With that being said, I still need to add the socket integrations.
 In terms of front-end, we have no front-end (if you actually read that in the Gru voice, you are definitely a man of culture.) I'll probably work on it in the very end (or if anyone wants to fork this, you're welcome to. I'll probably treat you to a cup of coffee or some maggi or something)
-I'm currently working on the cookie/message service, so till I get there, stay tuned (and gimme some treats as well if you want to :D)
 
 _Until then, Honk_
 #
