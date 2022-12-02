@@ -59,6 +59,4 @@ function encodePassword (password) {
 module.exports = {
 	checkUserInfo,
 	encodePassword,
-	caesarCipher,
-	vigenereCipher
 }
