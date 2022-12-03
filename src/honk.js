@@ -12,9 +12,8 @@ const DB = require('../database/database');
 global.Tools = require('./tools')
 
 const honk = express();
-const honkServer = http.createServer(honk);
+global.honkServer = http.createServer(honk);
 const PORT = serverInfo.port ?? 6005;
-const io = socketio(honkServer);
 
 nunjucks.configure({ express: honk })
 honk.use(bodyParser.urlencoded({ extended: true }));

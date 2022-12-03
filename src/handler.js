@@ -16,7 +16,7 @@ module.exports = function handler (app) {
 				try {
 					const sockets = await DBH.getChats();
 					if (!sockets.find(socket => socket === args[2])) {
-						return res.send("Chat not found ;-;");;
+						return res.redirect('./'+args.filter((e, i) => i-1).join('/'));
 					}
 					return res.sendFile(path.join(__dirname, '../templates/chat.html'));
 				}
@@ -41,7 +41,7 @@ module.exports = function handler (app) {
 				break;
 			}
 			default: {
-				res.send('[-_-]!');
+				res.sendFile(req.path);
 			}
 		};
 	};
@@ -52,7 +52,7 @@ module.exports = function handler (app) {
 			case 'fetch-messages': {
 				console.log(req.body.socket);
 				try {
-					const messages = await DBH.fetchMessages(req.body.socket);
+					const messages = await DBH.fetchMessages(req.body.chat);
 					res.send(JSON.stringify(messages));
 					break;
 				}
@@ -63,7 +63,7 @@ module.exports = function handler (app) {
 				break;
 			}
 			case 'send-message': {
-				const { socket, message } = req.body;
+				const { chat, message } = req.body;
 				try {
 					const sockets = await DBH.getChats();
 					if (!sockets.find(chat => socket === chat)) {
@@ -72,7 +72,7 @@ module.exports = function handler (app) {
 					try {
 						console.log("A");
 						DBH.saveMessage({
-							chat: socket,
+							chat,
 							user: req.cookies.name,
 							message
 						}); 

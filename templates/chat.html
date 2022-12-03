@@ -11,9 +11,9 @@
 	</style>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<script>
-		let socket;
-		function showMessage (messageObject) {
+	<script src="/socket.io/socket.io.js"></script>
+	<script>	
+		function showMessage (messageObject, error = false) {
 			// make a message element
 			let messageElement = document.createElement('div');
 			messageElement.className = 'message-container';
@@ -35,24 +35,26 @@
 			// append the whole thing into message container
 			document.getElementsByClassName('messages-container')[0].appendChild(messageElement);
 		}
-
 		function sendMessage () {
-			axios.post('/send-message', {
+			socket.emit('sendMessage', {
 				message: document.getElementById('message-field').value,
-				socket
+				chat
 			});
-			// and then comes a socket broadcast which confirms the user message
 		}
 
-		window.onload = function ( ) {
-			socket = window.location.href.split('/').pop();
-			axios.post('/fetch-messages', { socket }).then(res => {
-				console.log(res);
+		window.onload = function () {
+			chat = window.location.href.split('/').pop();
+			axios.post('/fetch-messages', { chat }).then(res => {
 				const messages = res.data;
+				console.log(messages);
 				messages.forEach(msg => showMessage(msg));
 			});
 		}
-
+	</script>
+	<script>
+		const socket = io();
+		socket.on('userMessage', data => showMessage(data));
+		socket.on('errorMessage', error => showMessage({ error }, true));	
 	</script>
 </head>
 

@@ -28,7 +28,7 @@ async function getChats () {
 }
 
 async function saveMessage (msg) {
-	// msg = { chat, user, message }
+	// msg = { chat, user, message, time }
 	const chats = await getChats();
 	if (!chats.find(socket => socket === msg.chat)) throw new Error("Socket doesn't exist ;-;");
 	ChatMessageSchema.set('collection', 'chat-' + msg.chat);
@@ -36,7 +36,7 @@ async function saveMessage (msg) {
 	const message = ChatMessage({
 		user: msg.user,
 		message: msg.message,
-		time: new Date()
+		time
 	});
 	console.log("Saving");
 	return message.save()
