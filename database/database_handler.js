@@ -36,9 +36,8 @@ async function saveMessage (msg) {
 	const message = ChatMessage({
 		user: msg.user,
 		message: msg.message,
-		time
+		time: msg.time
 	});
-	console.log("Saving");
 	return message.save()
 }
 
