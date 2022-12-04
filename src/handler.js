@@ -65,7 +65,6 @@ module.exports = function handler (app) {
 			}
 			else res.sendFile(path.join(__dirname, '../templates/chat.html'));
 		}).catch(err => console.log(err));
-		console.log("..");
 	});
 	// To fetch the messages of the specific chat on first connection
 	app.post('/fetch-messages', (req, res) => DBH.fetchMessages(req.body.chat).then(messages => res.send(JSON.stringify(messages))).catch(err => console.log(err)));

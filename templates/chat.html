@@ -46,7 +46,7 @@
 			const msg = {
 				message: document.getElementById('message-field').value,
 				chat,
-				time: new Date()
+				time: Date()
 			};
 			axios.post('/send-message', msg).then(res => {
 				msg.user = res.data.user;
