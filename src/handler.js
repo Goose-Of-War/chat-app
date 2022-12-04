@@ -46,7 +46,7 @@ module.exports = function handler (app) {
 				res.redirect("/success");
 			}).catch(err => console.log(err));
 		} else res.send('Invalid values');
-	})
+	});
 
 	// Successful sign-in/sign-up
 	app.get('/success', (req, res) => {
@@ -61,51 +61,11 @@ module.exports = function handler (app) {
 		if (!req.cookies.user) return res.redirect('/signin');
 		DBH.getChats().then(sockets => {
 			if (!sockets.find(socket => socket === args[2])) {
-				return res.send(JSON.stringify({code: 404, data: 'Not found'}));
+				res.send(JSON.stringify({code: 404, data: 'Not found'}));
 			}
-			return res.sendFile(path.join(__dirname, '../templates/chat.html'));
+			else res.sendFile(path.join(__dirname, '../templates/chat.html'));
 		}).catch(err => console.log(err));
-	})
+	});
 	// To fetch the messages of the specific chat
-	app.post('/fetch-messages', (req, res) => {
-		console.log(req.body.socket);
-		DBH.fetchMessages(req.body.chat).then(messages => res.send(JSON.stringify(messages))).catch(err => console.log(err));
-	})
-
-	async function post (req, res) {
-		const args = req.path.split("/");
-		switch (args[1]) {
-			case 'fetch-messages': {
-				break;
-			}
-			case 'send-message': {
-				const { chat, message } = req.body;
-				try {
-					const sockets = await DBH.getChats();
-					if (!sockets.find(chat => socket === chat)) {
-						return res.send("Chat not found ;-;");;
-					}
-					try {
-						console.log("A");
-						DBH.saveMessage({
-							chat,
-							user: req.cookies.name,
-							message
-						}); 
-					}
-					catch (err) {
-						console.log(err);
-					}
-				}
-				catch (err) {
-					console.log(err);
-					res.send(";-;");
-				}
-				break;
-			}
-			default: {
-				res.send(";-;");
-			}
-		};
-	};
+	app.post('/fetch-messages', (req, res) => DBH.fetchMessages(req.body.chat).then(messages => res.send(JSON.stringify(messages))).catch(err => console.log(err)));
 };
