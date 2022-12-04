@@ -17,28 +17,43 @@
 			// make a message element
 			let messageElement = document.createElement('div');
 			messageElement.className = 'message-container';
-			// user
-			let userElement = document.createElement('div');
-			userElement.className = 'message-user';
-			userElement.innerHTML = messageObject.user;
-			messageElement.appendChild(userElement);
-			// time
-			let timeElement = document.createElement('div');
-			timeElement.className = 'message-time';
-			timeElement.innerHTML = messageObject.time;
-			messageElement.appendChild(timeElement);
-			// message
-			let bodyElement = document.createElement('div');
-			bodyElement.className = 'message-body';
-			bodyElement.innerHTML = messageObject.message;
-			messageElement.appendChild(bodyElement);
+			if (!error) {
+				// user
+				let userElement = document.createElement('div');
+				userElement.className = 'message-user';
+				userElement.innerHTML = messageObject.user;
+				messageElement.appendChild(userElement);
+				// time
+				let timeElement = document.createElement('div');
+				timeElement.className = 'message-time';
+				timeElement.innerHTML = messageObject.time;
+				messageElement.appendChild(timeElement);
+				// message
+				let bodyElement = document.createElement('div');
+				bodyElement.className = 'message-body';
+				bodyElement.innerHTML = messageObject.message;
+				messageElement.appendChild(bodyElement);
+			} else {
+				let errorElement = document.createElement('div');
+				errorElement.className = 'message-error';
+				errorElement.innerHTML = JSON.stringify(messageObject.error);
+				messageElement.appendChild(errorElement);
+			}
 			// append the whole thing into message container
 			document.getElementsByClassName('messages-container')[0].appendChild(messageElement);
 		}
 		function sendMessage () {
-			socket.emit('sendMessage', {
+			const msg = {
 				message: document.getElementById('message-field').value,
-				chat
+				chat,
+				time: new Date()
+			};
+			axios.post('/send-message', msg).then(res => {
+				msg.user = res.data.user;
+				socket.emit('sendMessage', msg);
+				document.getElementById('message-field').value = '';
+			}).catch(err => {
+				showMessage({ error: 'Message wasn\'t sent' }, true);
 			});
 		}
 

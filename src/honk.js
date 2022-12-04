@@ -4,11 +4,11 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const http = require('http');
 const nunjucks = require('nunjucks');
-const socketio = require('socket.io');
 
 const appHandler = require('./handler');
 const serverInfo = require('./serverinfo.json');
 const DB = require('../database/database');
+const socketHandler = require('./sockets');
 global.Tools = require('./tools')
 
 const honk = express();
@@ -23,5 +23,6 @@ honk.use(cookieParser());
 appHandler(honk);
 
 if (serverInfo.mongoLink) DB.init();
+socketHandler.init()
 
 honkServer.listen(PORT, () => console.log(`Honking in port ${PORT}`));

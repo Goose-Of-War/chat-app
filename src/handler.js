@@ -65,7 +65,14 @@ module.exports = function handler (app) {
 			}
 			else res.sendFile(path.join(__dirname, '../templates/chat.html'));
 		}).catch(err => console.log(err));
+		console.log("..");
 	});
-	// To fetch the messages of the specific chat
+	// To fetch the messages of the specific chat on first connection
 	app.post('/fetch-messages', (req, res) => DBH.fetchMessages(req.body.chat).then(messages => res.send(JSON.stringify(messages))).catch(err => console.log(err)));
+	// To save a new message
+	app.post('/send-message', (req, res) => {
+		const msg = req.body;
+		msg.user = req.cookies.name;
+		DBH.saveMessage(msg).then(fin => res.send(JSON.stringify({ user: msg.user }))).catch(err => console.log(err));
+	})
 };
