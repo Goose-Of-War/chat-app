@@ -15,7 +15,7 @@ const honk = express();
 global.honkServer = http.createServer(honk);
 const PORT = serverInfo.port ?? 6005;
 
-nunjucks.configure({ express: honk })
+nunjucks.configure({ express: honk, noCache: true })
 honk.use(bodyParser.urlencoded({ extended: true }));
 honk.use(bodyParser.json())
 honk.use(cookieParser());

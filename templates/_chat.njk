@@ -1,7 +1,7 @@
-<html>
-<head>
-	<title>Chat</title>
+{% extends './_base.njk' %}
 
+
+{% block customcss %}
 	<style>
 		.message-container{
 			margin: 5px;
@@ -9,7 +9,9 @@
 			border-radius: 4px;
 		}
 	</style>
+{% endblock %}
 
+{% block customjs %}
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>	
@@ -71,9 +73,9 @@
 		socket.on('userMessage', data => showMessage(data));
 		socket.on('errorMessage', error => showMessage({ error }, true));	
 	</script>
-</head>
+{% endblock %}
 
-<body>
+{% block pagecontent %}
 	<h3>Chat</h3>
 	<hr>
 	<div class="chat-container">
@@ -85,5 +87,4 @@
 			<button type="submit" onclick="sendMessage()"> -> </button>
 		</div>
 	</div>
-</body>
-</html>
+{% endblock %}

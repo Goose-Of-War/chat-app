@@ -21,11 +21,14 @@ The chat app works on node, using the following modules:
 - `socket.io`: for the message service (working on it in the new branch)
 - `nunjucks`: for the templates (when I finally get to front-end ;-;)
 
+#
 ### Current progress (and stuff to do?)
 
 I have a good amount of back-end stuff ready. Mongoose works; data is stored properly. I got sockets up and running (thank you [Part](https://github.com/PartMan7) for pointing out that I need to initialize my sockets js file.) Now, for the most part, only one thing is left... Front-end! _cue lightning, thunder, and all the horror stuff_
 
-Now is the time for nunjucks to finally show it's presence. Yoroshiku onegaishimasu, nunjucks. Also, remind me to add submit event listeners and stuff.
+Now is the time for nunjucks to finally show it's presence. Yoroshiku onegaishimasu, nunjucks. I have some templates ready, and I have converted everything into Nunjucks for now. Here's to adding new stuff :)
+
+Also, remind me to add submit event listeners and stuff.
 
 Cheer me on, folks (and gimme maggi ;-;)
 

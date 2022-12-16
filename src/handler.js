@@ -4,15 +4,28 @@ const path  = require('path');
 const DBH = require('../database/database_handler');
 
 module.exports = function handler (app) {
+	// Middlewares
+	app.use(/.*/, (req, res, next) => {
+		// The app will now check for signed in or not
+		res.signedIn = Boolean(req.cookies.user);
+
+		res.renderFile = function (filePath, ctx = {}) {
+			ctx.signedIn = res.signedIn;
+			res.render(path.join(__dirname, '../templates', filePath), ctx);
+		}
+		next();
+	});
+
+
 	// plain redirect ;-;
-	app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../templates/index.html')));
+	app.get('/', (req, res) => res.renderFile('_base.njk'));
 
 	// Auth
 
 	// Sign-in
 	app.get('/signin', (req, res) => {
-		if (req.cookies.user) res.redirect('/success');
-		res.sendFile(path.join(__dirname, '../templates/signin.html'));
+		if (req.cookies.user) return res.redirect('/success');
+		res.renderFile('signin.njk');
 	});
 
 	app.post('/signin', (req, res) => {
@@ -24,9 +37,7 @@ module.exports = function handler (app) {
 			if (user) {
 				res.cookie('user', username);
 				res.cookie('name', user.displayName ?? 'Anonymous');
-				res.redirect("/success");
-			} else {
-				res.send('Invalid creds.');
+				res.send("success");
 			}
 		}).catch(err => console.log(err));
 	});
@@ -34,7 +45,7 @@ module.exports = function handler (app) {
 	// Sign-up
 	app.get('/signup', (req, res) => {
 		if (req.cookies.user) res.redirect('/success');
-		res.sendFile(path.join(__dirname, '../templates/signup.html'));
+		res.renderFile('signup.njk');
 	});
 
 	app.post('/signup', (req, res) => {
@@ -43,15 +54,21 @@ module.exports = function handler (app) {
 			DBH.addNewUser(user).then(output => {
 				res.cookie('user', username);
 				res.cookie('name', displayName ?? 'Anonymous');
-				res.redirect("/success");
+				return res.redirect("/success");
 			}).catch(err => console.log(err));
 		} else res.send('Invalid values');
 	});
 
 	// Successful sign-in/sign-up
 	app.get('/success', (req, res) => {
-		if (!req.cookies.user) res.redirect('/signin');
-		res.sendFile(path.join(__dirname, '../templates/signedin.html'));
+		if (!req.cookies.user) return res.redirect('/signin');
+		res.renderFile('signedin.njk');
+	});
+
+	app.get('/signout', (req, res) => {
+		res.clearCookie('user');
+		res.clearCookie('name');
+		res.redirect('/');
 	});
 
 	// Chats
@@ -63,7 +80,9 @@ module.exports = function handler (app) {
 			if (!sockets.find(socket => socket === args[2])) {
 				res.send(JSON.stringify({code: 404, data: 'Not found'}));
 			}
-			else res.sendFile(path.join(__dirname, '../templates/chat.html'));
+			else res.renderFile('_chat.njk', {
+				pagetitle: `Chat ${args[2]}`
+			});
 		}).catch(err => console.log(err));
 	});
 	// To fetch the messages of the specific chat on first connection

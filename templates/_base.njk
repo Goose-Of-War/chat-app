@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		{{ pagetitle if pagetitle else "Chat App"}}
+	</title>
+	<!-- Custom CSS -->
+	<style>
+		body {
+			margin: 0px;
+			padding: 0px;
+		}
+
+		navbar {
+			padding: 10px;
+			background-color: blue;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+	</style>
+	{% block customcss %}
+	
+	{% endblock %}
+	<!-- Custom DOM -->
+	<script>
+		function redirectWithin (address) {
+			window.location.href = [...Array(3)].map((_, i) => window.location.href.split('/')[i]).join('/') + address;
+		}
+	</script>
+	{% block customjs %}
+	{% endblock %}
+</head>
+<body>
+	<navbar>
+		<div id="navbar-site-name">Chat App</div>
+		<div>
+			{% if signedIn %}
+				<button onclick="redirectWithin('/signout')"> Sign Out </button>
+			{% else %}
+				<button onclick="redirectWithin('/signin')"> Sign In </button>
+				<button onclick="redirectWithin('/signup')"> Sign Up </button>
+			{% endif %}
+		</div>
+	</navbar>
+	<main id='page-content'>
+		{% block pagecontent %}
+		
+		{% endblock %}
+	</main>
+	<footer></footer>
+</body>
+</html>
