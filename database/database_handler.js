@@ -32,21 +32,25 @@ async function saveMessage (msg) {
 	const chats = await getChats();
 	if (!chats.find(socket => socket === msg.chat)) throw new Error("Socket doesn't exist ;-;");
 	ChatMessageSchema.set('collection', 'chat-' + msg.chat);
-	const ChatMessage = mongoose.model('ChatMessage', ChatMessageSchema);
+	let ChatMessage = mongoose.model(`ChatMessage-${msg.chat}`, ChatMessageSchema);
 	const message = ChatMessage({
 		user: msg.user,
 		message: msg.message,
 		time: msg.time
 	});
-	return message.save()
+	await message.save();
+	delete mongoose.models[`ChatMessage-${msg.chat}`];
+	return message;
 }
 
 async function fetchMessages (socket) {
 	const chats = await getChats();
 	if (!chats.find(chat => chat === socket)) throw new Error("Socket doesn't exist ;-;");
 	ChatMessageSchema.set('collection', 'chat-' + socket);
-	const ChatMessage = mongoose.model('ChatMessage', ChatMessageSchema);
-	return ChatMessage.find();
+	let ChatMessage = mongoose.model(`ChatMessage-'${socket}`, ChatMessageSchema);
+	const messages = await ChatMessage.find();
+	delete mongoose.models[`ChatMessage-${socket}`];
+	return messages;
 }
 
 module.exports = { addNewUser, fetchMessages, getUser, getChats, saveMessage }
