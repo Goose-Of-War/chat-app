@@ -3,18 +3,18 @@
 
 {% block customjs %}
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-		<script>
-			function submitCreds() {
-				let inputs = document.getElementsByTagName('input');
-				const details = {};
-				for (let i in inputs) {
-					details[inputs[i]?.name] = inputs[i]?.value;
-				};
-				axios.post('/signin', details).then(res => {
-					window.location.href = res.request.responseURL;
-				});
+	<script>
+		function submitCreds() {
+			let inputs = document.getElementsByTagName('input');
+			const details = {};
+			for (let i in inputs) {
+				details[inputs[i]?.name] = inputs[i]?.value;
 			};
-		</script>
+			axios.post('/signin', details).then(res => {
+				window.location.href = res.request.responseURL;
+			});
+		};
+	</script>
 {% endblock %}
 
 {% block pagecontent %}
